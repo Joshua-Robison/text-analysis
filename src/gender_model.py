@@ -13,9 +13,9 @@ parse_article
 import re
 import nltk
 import argparse
-import urllib.request
+# import urllib.request
 from typing import List
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from newspaper import Article
 from collections import Counter
 
@@ -149,20 +149,20 @@ def parse_article(url: str):
     None
     """
     # parse article: BeautifulSoup
-    fp = urllib.request.urlopen(url)
-    mbytes = fp.read()
-    html = mbytes.decode('utf8')
-    fp.close()
-    soup = BeautifulSoup(html, 'lxml')
-    text = clean_text(soup.text)
-    parse_gender(text)
+    # fp = urllib.request.urlopen(url)
+    # mbytes = fp.read()
+    # html = mbytes.decode('utf8')
+    # fp.close()
+    # soup = BeautifulSoup(html, 'lxml')
+    # text = clean_text(soup.text)
+    # parse_gender(text)
 
     # parse article: Article
     article = Article(args.url)
     article.download()
     article.parse()
     text = article.text
-    text = clean_text(soup.text)
+    text = clean_text(text)
     parse_gender(text)
 
     return None
