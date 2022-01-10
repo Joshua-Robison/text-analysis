@@ -1,21 +1,9 @@
-# -*- coding: utf-8 -*-
-"""
-Applied Text Analysis with Python
-
-Function Definitions:
---------------------
-genderize
-count_gender
-parse_gender
-clean_text
-parse_article
-"""
 import re
 import nltk
 import argparse
-# import urllib.request
+import urllib.request
 from typing import List
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 from newspaper import Article
 from collections import Counter
 
@@ -44,17 +32,7 @@ FEMALE_WORDS = set([
 
 
 def genderize(sentence: List[str]) -> str:
-    """
-    This function returns the gender association for a sentence.
-
-    Parameters:
-    ----------
-    sentence : List[str]
-
-    Returns:
-    -------
-    str : The gender of the sentence
-    """
+    """This function returns the gender association for a sentence."""
     mwlen = len(MALE_WORDS.intersection(sentence))
     fwlen = len(FEMALE_WORDS.intersection(sentence))
     result = UNKNOWN
@@ -69,18 +47,7 @@ def genderize(sentence: List[str]) -> str:
 
 
 def count_gender(sentences: List[List[str]]):
-    """
-    This function returns the gender association stats for a sentence.
-
-    Parameters:
-    ----------
-    sentences : List[List[str]]
-
-    Returns
-    -------
-    sents : Counter
-    words : Counter
-    """
+    """This function returns the gender association stats for a sentence."""
     sents = Counter()
     words = Counter()
     for sentence in sentences:
@@ -92,19 +59,7 @@ def count_gender(sentences: List[List[str]]):
 
 
 def parse_gender(text: List[str]):
-    """
-    This function prints gender statistics to the terminal for a given
-    block of text. The text is assumed to be a list of sentences,
-    where each sentence is contained in a single string.
-
-    Parameters:
-    ----------
-    text : List[str]
-
-    Returns:
-    -------
-    None
-    """
+    """This function prints gender statistics to the terminal."""
     sentences = [[word.lower() for word in nltk.word_tokenize(sentence)] for sentence in text]
     sents, words = count_gender(sentences)
     total = sum(words.values())
@@ -117,17 +72,7 @@ def parse_gender(text: List[str]):
 
 
 def clean_text(text: str) -> List[str]:
-    """
-    This function cleans a block of text extracted from BeautifulSoup.
-
-    Parameters:
-    ----------
-    text : str
-
-    Returns:
-    -------
-    text : List[str]
-    """
+    """This function cleans a block of text extracted from BeautifulSoup."""
     regex = r'[^\w+\.\?\!\"]'
     text = re.sub(regex, ' ', text)
     text = nltk.tokenize.sent_tokenize(text, 'english')
@@ -136,28 +81,21 @@ def clean_text(text: str) -> List[str]:
 
 
 def parse_article(url: str):
-    """
-    This function parses a url using the BeautifulSoup and Article
-    libraries and computes the gender statistics from each method.
-
-    Parameters:
-    ----------
-    url : str
-
-    Returns:
-    -------
-    None
-    """
+    """This function parses a url and computes the gender statistics."""
     # parse article: BeautifulSoup
-    # fp = urllib.request.urlopen(url)
-    # mbytes = fp.read()
-    # html = mbytes.decode('utf8')
-    # fp.close()
-    # soup = BeautifulSoup(html, 'lxml')
-    # text = clean_text(soup.text)
-    # parse_gender(text)
+    print("BeautifulSoup Results:")
+    print("----------------------")
+    fp = urllib.request.urlopen(url)
+    mbytes = fp.read()
+    html = mbytes.decode('utf8')
+    fp.close()
+    soup = BeautifulSoup(html, 'lxml')
+    text = clean_text(soup.text)
+    parse_gender(text)
 
     # parse article: Article
+    print("\nNewspaper3k Results:")
+    print("--------------------")
     article = Article(args.url)
     article.download()
     article.parse()
@@ -170,6 +108,6 @@ def parse_article(url: str):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process article.')
-    parser.add_argument('url', type=str, help='Article URL.')
+    parser.add_argument('--url', type=str, help='Article URL.')
     args = parser.parse_args()
     parse_article(args.url)
