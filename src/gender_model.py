@@ -14,6 +14,7 @@ FEMALE = "female"
 UNKNOWN = "unknown"
 BOTH = "both"
 
+# Male Word Bank
 MALE_WORDS = set(
     [
         "guy",
@@ -56,6 +57,7 @@ MALE_WORDS = set(
     ]
 )
 
+# Female Word Bank
 FEMALE_WORDS = set(
     [
         "girl",
@@ -124,7 +126,7 @@ def count_gender(sentences: List[List[str]]):
     return sents, words
 
 
-def parse_gender(text: List[str]):
+def parse_gender(text: List[str]) -> None:
     """This function prints gender statistics to the terminal."""
     sentences = [
         [word.lower() for word in nltk.word_tokenize(sentence)] for sentence in text
@@ -148,7 +150,7 @@ def clean_text(text: str) -> List[str]:
     return text
 
 
-def parse_article(url: str):
+def parse_article(url: str) -> None:
     """This function parses a url and computes the gender statistics."""
     # parse article: BeautifulSoup
     print("BeautifulSoup Results:")
