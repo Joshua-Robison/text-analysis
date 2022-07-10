@@ -9,26 +9,92 @@ from collections import Counter
 
 
 # Constants
-MALE = 'male'
-FEMALE = 'female'
-UNKNOWN = 'unknown'
-BOTH = 'both'
+MALE = "male"
+FEMALE = "female"
+UNKNOWN = "unknown"
+BOTH = "both"
 
-MALE_WORDS = set([
-    'guy', 'spokesman', 'hero', 'chairman', 'men', 'him', 'he', 'his',
-    'boy', 'boyfriend', 'father', 'brother', 'brothers', 'dad', 'fiance',
-    'dads', 'fathers', 'son', 'sons', 'uncle', 'uncles', 'waiter', 'actor',
-    'priest', 'prince', 'king', 'widower', 'gentleman', 'gentlemen',
-    'nephew', 'grandfather', 'husband', 'boy', 'boys', 'man', 'mr', 'male'
-])
+MALE_WORDS = set(
+    [
+        "guy",
+        "spokesman",
+        "hero",
+        "chairman",
+        "men",
+        "him",
+        "he",
+        "his",
+        "boy",
+        "boyfriend",
+        "father",
+        "brother",
+        "brothers",
+        "dad",
+        "fiance",
+        "dads",
+        "fathers",
+        "son",
+        "sons",
+        "uncle",
+        "uncles",
+        "waiter",
+        "actor",
+        "priest",
+        "prince",
+        "king",
+        "widower",
+        "gentleman",
+        "gentlemen",
+        "nephew",
+        "grandfather",
+        "husband",
+        "boy",
+        "boys",
+        "man",
+        "mr",
+        "male",
+    ]
+)
 
-FEMALE_WORDS = set([
-    'girl', 'spokeswoman', 'heroine', 'chairwoman', 'her', 'she', 'hers',
-    'lady', 'girlfriend', 'mother', 'sister', 'sisters', 'mom', 'fiancee',
-    'moms', 'mothers', 'daughter', 'daughters', 'aunt', 'aunts', 'actress',
-    'ladies', 'princess', 'queen', 'widow', 'wife', 'wives', 'mrs', 'ms',
-    'neice', 'grandmother', 'granddaughter', 'grandma', 'female', 'woman'
-])
+FEMALE_WORDS = set(
+    [
+        "girl",
+        "spokeswoman",
+        "heroine",
+        "chairwoman",
+        "her",
+        "she",
+        "hers",
+        "lady",
+        "girlfriend",
+        "mother",
+        "sister",
+        "sisters",
+        "mom",
+        "fiancee",
+        "moms",
+        "mothers",
+        "daughter",
+        "daughters",
+        "aunt",
+        "aunts",
+        "actress",
+        "ladies",
+        "princess",
+        "queen",
+        "widow",
+        "wife",
+        "wives",
+        "mrs",
+        "ms",
+        "neice",
+        "grandmother",
+        "granddaughter",
+        "grandma",
+        "female",
+        "woman",
+    ]
+)
 
 
 def genderize(sentence: List[str]) -> str:
@@ -60,22 +126,24 @@ def count_gender(sentences: List[List[str]]):
 
 def parse_gender(text: List[str]):
     """This function prints gender statistics to the terminal."""
-    sentences = [[word.lower() for word in nltk.word_tokenize(sentence)] for sentence in text]
+    sentences = [
+        [word.lower() for word in nltk.word_tokenize(sentence)] for sentence in text
+    ]
     sents, words = count_gender(sentences)
     total = sum(words.values())
     for gender, count in words.items():
         pcent = 100 * count / total
         nsents = sents[gender]
-        print('{0:.3f}% {1} ({2} sentences)'.format(pcent, gender, nsents))
+        print("{0:.3f}% {1} ({2} sentences)".format(pcent, gender, nsents))
 
     return None
 
 
 def clean_text(text: str) -> List[str]:
     """This function cleans a block of text extracted from BeautifulSoup."""
-    regex = r'[^\w+\.\?\!\"]'
-    text = re.sub(regex, ' ', text)
-    text = nltk.tokenize.sent_tokenize(text, 'english')
+    regex = r"[^\w+\.\?\!\"]"
+    text = re.sub(regex, " ", text)
+    text = nltk.tokenize.sent_tokenize(text, "english")
 
     return text
 
@@ -87,9 +155,9 @@ def parse_article(url: str):
     print("----------------------")
     fp = urllib.request.urlopen(url)
     mbytes = fp.read()
-    html = mbytes.decode('utf8')
+    html = mbytes.decode("utf8")
     fp.close()
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, "lxml")
     text = clean_text(soup.text)
     parse_gender(text)
 
@@ -106,8 +174,8 @@ def parse_article(url: str):
     return None
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Process article.')
-    parser.add_argument('--url', type=str, help='Article URL.')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Process article.")
+    parser.add_argument("--url", type=str, help="Article URL.")
     args = parser.parse_args()
     parse_article(args.url)
